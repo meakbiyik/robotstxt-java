@@ -17,6 +17,7 @@ package com.google.search.robotstxt;
 import com.google.common.flogger.FluentLogger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -114,18 +115,16 @@ public class RobotsMatcher implements Matcher {
 
       for (RobotsContents.Group.Rule rule : group.getRules()) {
         switch (rule.getDirectiveType()) {
-          case ALLOW:
-            {
-              final int priority =
-                  matchingStrategy.matchAllowPriority(path, rule.getDirectiveValue());
-              if (isSpecificGroup) {
-                allow.updateSpecific(priority);
-              }
-              if (!ignoreGlobal && group.isGlobal()) {
-                allow.updateGlobal(priority);
-              }
-              break;
+          case ALLOW: {
+            final int priority = matchingStrategy.matchAllowPriority(path, rule.getDirectiveValue());
+            if (isSpecificGroup) {
+              allow.updateSpecific(priority);
             }
+            if (!ignoreGlobal && group.isGlobal()) {
+              allow.updateGlobal(priority);
+            }
+            break;
+          }
           case DISALLOW:
             {
               final int priority =
@@ -153,7 +152,7 @@ public class RobotsMatcher implements Matcher {
       disallow.resetGlobal();
     }
 
-    return Map.entry(allow, disallow);
+    return new AbstractMap.SimpleEntry<>(allow, disallow);
   }
 
   private Map.Entry<Match, Match> computeMatchPriorities(

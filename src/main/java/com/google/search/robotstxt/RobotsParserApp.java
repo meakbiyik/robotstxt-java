@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -72,7 +72,7 @@ public class RobotsParserApp implements Callable<Integer> {
         return ByteStreams.toByteArray(System.in);
       } else {
         // Reading from file
-        return Files.readAllBytes(Path.of(robotsTxtPath));
+        return Files.readAllBytes(Paths.get(robotsTxtPath));
       }
     } catch (final UncheckedIOException | IOException | InvalidPathException e) {
       throw new ParseException("Failed to read robots.txt file.", e);
