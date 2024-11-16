@@ -70,11 +70,13 @@ public class RobotsLongestMatchStrategy implements MatchingStrategy {
 
   @Override
   public int matchAllowPriority(String path, String pattern) {
+    path = path.length() > 0 ? path : "/";
     return matches(path, pattern) ? pattern.length() : -1;
   }
 
   @Override
   public int matchDisallowPriority(String path, String pattern) {
+    path = path.length() > 0 ? path : "/";
     return matches(path, pattern) ? pattern.length() : -1;
   }
 }

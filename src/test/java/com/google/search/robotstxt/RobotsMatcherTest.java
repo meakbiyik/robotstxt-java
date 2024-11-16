@@ -217,6 +217,19 @@ public class RobotsMatcherTest {
     assertFalse(matcherLower.singleAgentAllowedByRobots("FooBot", url));
   }
 
+  /** Verifies: Tester behaving the same way for empty path or a single trailing slash. */
+  @Test
+  public void testUriEmptyPath() {
+    final String robotsTxtBody = "user-agent: *\n" + "disallow: /\n";
+
+    final String urlEmpty = "http://foo.bar";
+    final String urlSlash = "http://foo.bar/";
+
+    final Matcher matcher = parse(robotsTxtBody);
+    assertFalse(matcher.singleAgentAllowedByRobots("FooBot", urlEmpty));
+    assertFalse(matcher.singleAgentAllowedByRobots("FooBot", urlSlash));
+  }
+
   /** Verifies: longest match strategy. */
   @Test
   public void testLongestMatch() {
