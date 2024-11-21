@@ -14,7 +14,8 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.Set;
 
 /** Representation of robots.txt contents: multiple groups of rules. */
 public class RobotsContents {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final Logger logger = LogManager.getLogger(RobotsContents.class);
   /**
    * Representation of robots.txt group of rules: multiple user-agents to which multiple rules are
    * applied.

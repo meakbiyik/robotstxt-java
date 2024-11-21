@@ -14,7 +14,8 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
 
 /** Robots.txt parser implementation. */
 public class RobotsParser extends Parser {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final Logger logger = LogManager.getLogger(RobotsParser.class);
   private final int valueMaxLengthBytes;
 
   public RobotsParser(final ParseHandler parseHandler) {
@@ -93,11 +94,17 @@ public class RobotsParser extends Parser {
       final int lineBegin,
       final int lineEnd,
       final int lineNumber) {
-    logger.at(level).log(
+    String logMessage = String.format(
         "%s%nAt line %d:%n%s\t",
         message,
         lineNumber,
         new String(Arrays.copyOfRange(robotsTxtBodyBytes, lineBegin, lineEnd)));
+
+    if (level == Level.WARNING) {
+      logger.warn(logMessage);
+    } else if (level == Level.INFO) {
+      logger.info(logMessage);
+    }
   }
 
   /**

@@ -14,7 +14,8 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -40,7 +41,7 @@ import picocli.CommandLine;
     exitCodeOnExecutionException = 2,
     exitCodeOnInvalidInput = 3)
 public class RobotsParserApp implements Callable<Integer> {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final Logger logger = LogManager.getLogger(RobotsParserApp.class);
 
   public RobotsParserApp() {}
 
@@ -81,7 +82,7 @@ public class RobotsParserApp implements Callable<Integer> {
 
   private static void logError(final Exception e) {
     System.out.println("ERROR: " + e.getMessage());
-    logger.atInfo().withCause(e).log("Stack trace:");
+    logger.atInfo().withThrowable(e).log("Stack trace:");
   }
 
   /**

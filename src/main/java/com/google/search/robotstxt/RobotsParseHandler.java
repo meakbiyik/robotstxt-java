@@ -14,12 +14,13 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.nio.charset.StandardCharsets;
 
 /** Implementation of parsing strategy used in robots.txt parsing. */
 public class RobotsParseHandler implements ParseHandler {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+  private static final Logger logger = LogManager.getLogger(RobotsParseHandler.class);
 
   protected RobotsContents robotsContents;
   private RobotsContents.Group currentGroup;
