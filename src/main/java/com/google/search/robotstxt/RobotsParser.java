@@ -14,15 +14,12 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 
 /** Robots.txt parser implementation. */
 public class RobotsParser extends Parser {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private final int valueMaxLengthBytes;
 
   public RobotsParser(final ParseHandler parseHandler) {
@@ -77,27 +74,12 @@ public class RobotsParser extends Parser {
             Stream.of("dissallow", "dissalow", "disalow", "diasllow", "disallaw")
                 .anyMatch(s -> key.compareToIgnoreCase(s) == 0);
         if (disallowTypoDetected) {
-          logger.atInfo().log("Fixed typo: \"%s\" -> \"%s\"", key, "disallow");
           return DirectiveType.DISALLOW;
         }
 
         return DirectiveType.UNKNOWN;
       }
     }
-  }
-
-  private static void log(
-      final Level level,
-      final String message,
-      final byte[] robotsTxtBodyBytes,
-      final int lineBegin,
-      final int lineEnd,
-      final int lineNumber) {
-    logger.at(level).log(
-        "%s%nAt line %d:%n%s\t",
-        message,
-        lineNumber,
-        new String(Arrays.copyOfRange(robotsTxtBodyBytes, lineBegin, lineEnd)));
   }
 
   /**
@@ -132,14 +114,6 @@ public class RobotsParser extends Parser {
     final int maxLengthBytes = valueMaxLengthBytes - 2;
 
     if (valueBytes.length > maxLengthBytes) {
-      log(
-          Level.INFO,
-          "Value truncated to " + valueMaxLengthBytes + " bytes.",
-          robotsTxtBodyBytes,
-          lineBegin,
-          lineEnd,
-          lineNumber);
-
       value =
           new String(
               valueBytes, 0, Math.min(valueBytes.length, maxLengthBytes), StandardCharsets.UTF_8);
@@ -179,24 +153,8 @@ public class RobotsParser extends Parser {
       // Google-specific optimization: some people forget the colon, so we need to
       // accept whitespace instead.
       if (whitespaceSeparator != lineEnd) {
-        log(
-            Level.INFO,
-            "Assuming whitespace as a separator.",
-            robotsTxtBodyBytes,
-            lineBegin,
-            lineEnd,
-            lineNumber);
         separator = whitespaceSeparator;
       } else {
-        if (hasContents) {
-          log(
-              Level.WARNING,
-              "No separator found.",
-              robotsTxtBodyBytes,
-              lineBegin,
-              lineEnd,
-              lineNumber);
-        }
         return;
       }
     }
@@ -205,20 +163,14 @@ public class RobotsParser extends Parser {
     try {
       key = trimBounded(robotsTxtBodyBytes, lineBegin, separator);
     } catch (ParseException e) {
-      log(Level.WARNING, "No key found.", robotsTxtBodyBytes, lineBegin, lineEnd, lineNumber);
       return;
     }
 
     DirectiveType directiveType = parseDirective(key);
-    if (directiveType == DirectiveType.UNKNOWN) {
-      log(Level.WARNING, "Unknown key.", robotsTxtBodyBytes, lineBegin, lineEnd, lineNumber);
-    }
-
     String value;
     try {
       value = getValue(robotsTxtBodyBytes, separator, limit, lineBegin, lineEnd, lineNumber);
     } catch (final ParseException e) {
-      log(Level.WARNING, "No value found.", robotsTxtBodyBytes, lineBegin, lineEnd, lineNumber);
       value = "";
       directiveType = DirectiveType.UNKNOWN;
     }

@@ -14,7 +14,6 @@
 
 package com.google.search.robotstxt;
 
-import com.google.common.flogger.FluentLogger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -27,8 +26,6 @@ import java.util.Map;
  * to a {@link MatchingStrategy} class.
  */
 public class RobotsMatcher implements Matcher {
-  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
-
   /** Class containing current match priorities */
   private static class Match {
     /** Priority based on agent-specific rules */
@@ -74,7 +71,6 @@ public class RobotsMatcher implements Matcher {
     try {
       parsedUrl = new URL(url);
     } catch (final MalformedURLException e) {
-      logger.atWarning().log("Malformed URL: \"%s\", replaced with \"/\"", url);
       return "/";
     }
     String path = parsedUrl.getPath();
