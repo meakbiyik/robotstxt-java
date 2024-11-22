@@ -14,8 +14,6 @@
 
 package com.google.search.robotstxt;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.Set;
 
 /** Representation of robots.txt contents: multiple groups of rules. */
 public class RobotsContents {
-  private static final Logger logger = LogManager.getLogger(RobotsContents.class);
   /**
    * Representation of robots.txt group of rules: multiple user-agents to which multiple rules are
    * applied.
@@ -90,10 +87,6 @@ public class RobotsContents {
       if (userAgent.length() >= 1
           && userAgent.charAt(0) == '*'
           && (userAgent.length() == 1 || Character.isWhitespace(userAgent.charAt(1)))) {
-
-        if (userAgent.length() > 1 && Character.isWhitespace(userAgent.charAt(1))) {
-          logger.atInfo().log("Assuming \"%s\" user-agent as \"*\"", userAgent);
-        }
 
         global = true;
       } else {

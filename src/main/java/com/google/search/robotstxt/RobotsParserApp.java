@@ -14,8 +14,6 @@
 
 package com.google.search.robotstxt;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -41,8 +39,6 @@ import picocli.CommandLine;
     exitCodeOnExecutionException = 2,
     exitCodeOnInvalidInput = 3)
 public class RobotsParserApp implements Callable<Integer> {
-  private static final Logger logger = LogManager.getLogger(RobotsParserApp.class);
-
   public RobotsParserApp() {}
 
   public static void main(final String[] args) {
@@ -80,11 +76,6 @@ public class RobotsParserApp implements Callable<Integer> {
     }
   }
 
-  private static void logError(final Exception e) {
-    System.out.println("ERROR: " + e.getMessage());
-    logger.atInfo().withThrowable(e).log("Stack trace:");
-  }
-
   /**
    * Parses given robots.txt file and performs matching process.
    *
@@ -96,7 +87,6 @@ public class RobotsParserApp implements Callable<Integer> {
     try {
       robotsTxtContents = readRobotsTxt();
     } catch (final ParseException e) {
-      logError(e);
       return 2;
     }
 
